@@ -9,6 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -244,6 +246,8 @@
             background: var(--light-color);
             transition: all 0.3s ease;
             cursor: pointer;
+            position: relative;
+            user-select: none;
         }
 
         .file-upload-area:hover {
@@ -337,6 +341,290 @@
         .file-remove:hover {
             background: #dc2626;
             transform: scale(1.1);
+        }
+
+        .sample-image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0;
+            height: 100%;
+            min-height: 200px;
+        }
+
+        .sample-image-label {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            text-align: center;
+            width: 100%;
+        }
+
+        .sample-image {
+            width: 100%;
+            height: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .sample-image:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transform: scale(1.02);
+        }
+
+        /* Image Modal Styles */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .image-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 9998;
+        }
+
+        .image-modal-content {
+            position: relative;
+            z-index: 9999;
+            max-width: 90%;
+            max-height: 90%;
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: zoomIn 0.3s ease;
+        }
+
+        .image-modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .image-modal-close {
+            position: fixed;
+            top: 20px;
+            right: 30px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10000;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .image-modal-close:hover {
+            background: rgba(0, 0, 0, 0.8);
+            transform: rotate(90deg);
+            border-color: rgba(255, 255, 255, 0.6);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .file-upload-wrapper .row {
+            align-items: stretch;
+            display: flex;
+        }
+
+        .file-upload-wrapper .col-md-7,
+        .file-upload-wrapper .col-md-5 {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-upload-wrapper .file-upload-section {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .file-upload-wrapper .sample-image-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            background: var(--light-color);
+        }
+
+        .sample-image-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        /* Modern Searchable Select Styles */
+        .modern-select-wrapper {
+            position: relative;
+        }
+
+        .modern-select-input {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .modern-select-input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(242, 166, 29, 0.1);
+            outline: none;
+        }
+
+        .modern-select-input.has-value {
+            color: var(--dark-color);
+        }
+
+        .modern-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            margin-top: 4px;
+        }
+
+        .modern-select-dropdown.active {
+            display: block;
+            animation: slideDown 0.2s ease;
+        }
+
+        .modern-select-option {
+            padding: 0.875rem 1.25rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .modern-select-option:last-child {
+            border-bottom: none;
+        }
+
+        .modern-select-option:hover {
+            background: #f8f9fa;
+        }
+
+        .modern-select-option.selected {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .modern-select-option.no-results {
+            padding: 1rem;
+            text-align: center;
+            color: #718096;
+            font-style: italic;
+        }
+
+        .modern-select-add-new {
+            padding: 0.875rem 1.25rem;
+            background: #e3f2fd;
+            border-top: 2px solid var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--secondary-color);
+            transition: all 0.2s ease;
+        }
+
+        .modern-select-add-new:hover {
+            background: #bbdefb;
+        }
+
+        .modern-select-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #718096;
+            transition: transform 0.3s ease;
+        }
+
+        .modern-select-wrapper.active .modern-select-icon {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .form-actions {
@@ -565,6 +853,80 @@
             margin-bottom: 0.5rem;
         }
 
+        /* Loading Screen Styles */
+        .loading-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 41, 73, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .loading-screen.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid rgba(242, 166, 29, 0.2);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .loading-subtext {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Validation Error Styles */
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #ef4444;
+        }
+
+        .form-control.is-invalid ~ .invalid-feedback,
+        .form-select.is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+
+        .form-group.has-error .form-label {
+            color: #ef4444;
+        }
+
         .email-notification {
             background: #e7f3ff;
             border-left: 4px solid #3b82f6;
@@ -700,6 +1062,7 @@
                                         First Name <span class="required">*</span>
                                     </label>
                                     <input type="text" class="form-control" name="firstName">
+                                    <div class="invalid-feedback">First name is required.</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -719,6 +1082,7 @@
                                         Email Address <span class="required">*</span>
                                     </label>
                                     <input type="email" class="form-control" name="email">
+                                    <div class="invalid-feedback">Please enter a valid email address.</div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -727,6 +1091,7 @@
                                         Phone Number <span class="required">*</span>
                                     </label>
                                     <input type="tel" class="form-control" name="phone">
+                                    <div class="invalid-feedback">Phone number is required.</div>
                                 </div>
                             </div>
                         </div>
@@ -743,6 +1108,7 @@
                                 Address <span class="required">*</span>
                             </label>
                             <textarea class="form-control" name="address" rows="3"></textarea>
+                            <div class="invalid-feedback">Address is required.</div>
                         </div>
                     </div>
 
@@ -762,6 +1128,7 @@
                                 <option value="renovation">Renovation</option>
                                 <option value="other">Other</option>
                             </select>
+                            <div class="invalid-feedback">Project type is required.</div>
                         </div>
 
                         <div class="form-group">
@@ -771,37 +1138,18 @@
                             <textarea class="form-control" name="projectDescription" rows="5" placeholder="Please describe your project in detail..."></textarea>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Budget Range
-                                    </label>
-                                    <select class="form-select" name="budgetRange">
-                                        <option value="">Select budget range...</option>
-                                        <option value="under-10k">Under $10,000</option>
-                                        <option value="10k-50k">$10,000 - $50,000</option>
-                                        <option value="50k-100k">$50,000 - $100,000</option>
-                                        <option value="100k-500k">$100,000 - $500,000</option>
-                                        <option value="over-500k">Over $500,000</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label class="form-label">
-                                        Timeline
-                                    </label>
-                                    <select class="form-select" name="timeline">
-                                        <option value="">Select timeline...</option>
-                                        <option value="asap">ASAP</option>
-                                        <option value="1-3months">1-3 Months</option>
-                                        <option value="3-6months">3-6 Months</option>
-                                        <option value="6-12months">6-12 Months</option>
-                                        <option value="over-12months">Over 12 Months</option>
-                                    </select>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                Timeline <span class="required">*</span>
+                            </label>
+                            <select class="form-select" name="timeline">
+                                <option value="">Select timeline...</option>
+                                <option value="1-3days">1-3 Days</option>
+                                <option value="4-6days">4-6 Days</option>
+                                <option value="2weeks">2 Weeks</option>
+                                <option value="1month">1 Month</option>
+                            </select>
+                            <div class="invalid-feedback">Timeline is required.</div>
                         </div>
 
                         <div class="form-group">
@@ -821,7 +1169,21 @@
                             <label class="form-label">
                                 Model of the Charger <span class="required">*</span>
                             </label>
-                            <input type="text" class="form-control" name="chargerModel" placeholder="e.g., Tesla Wall Connector, ChargePoint Home Flex, etc.">
+                            <div class="modern-select-wrapper" id="chargerModelWrapper">
+                                <input type="text" 
+                                       class="modern-select-input form-control" 
+                                       id="chargerModelInput" 
+                                       name="chargerModel" 
+                                       placeholder="Search or type to add new model..."
+                                       autocomplete="off"
+                                       data-selected-id="">
+                                <i class="bi bi-chevron-down modern-select-icon"></i>
+                                <div class="modern-select-dropdown" id="chargerModelDropdown">
+                                    <div class="modern-select-option no-results">Loading models...</div>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback" style="display: none;">Charger model is required.</div>
+                            <input type="hidden" name="chargerModelId" id="chargerModelId" value="">
                         </div>
 
                         <!-- Duke Rebate Program -->
@@ -937,16 +1299,30 @@
                             <label class="form-label">
                                 <i class="bi bi-lightning-charge"></i> Electrical Panel <span class="required">*</span>
                             </label>
-                            <div class="file-upload-section" data-category="electrical-panel">
-                                <div class="file-upload-area" data-category="electrical-panel">
-                                    <div class="file-upload-icon">
-                                        <i class="bi bi-cloud-upload"></i>
+                            <div class="file-upload-wrapper">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="file-upload-section" data-category="electrical-panel">
+                                            <div class="file-upload-area" data-category="electrical-panel">
+                                                <div class="file-upload-icon">
+                                                    <i class="bi bi-cloud-upload"></i>
+                                                </div>
+                                                <div class="file-upload-text">Drag & drop files here or click to browse</div>
+                                                <div class="file-upload-hint">Supported formats: PDF, JPG, PNG</div>
+                                                <input type="file" class="file-input-category" name="electrical-panel[]" data-category="electrical-panel" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                                            </div>
+                                            <div class="file-list" data-category="electrical-panel"></div>
+                                        </div>
                                     </div>
-                                    <div class="file-upload-text">Drag & drop files here or click to browse</div>
-                                    <div class="file-upload-hint">Supported formats: PDF, JPG, PNG</div>
-                                    <input type="file" class="file-input-category" data-category="electrical-panel" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                                    <div class="col-md-5">
+                                        <div class="sample-image-container">
+                                            <div class="sample-image-label">Sample Photo</div>
+                                            <div class="sample-image-wrapper">
+                                                <img src="" alt="Electrical Panel Sample" class="sample-image" data-category="electrical-panel">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="file-list" data-category="electrical-panel"></div>
                             </div>
                         </div>
 
@@ -955,16 +1331,30 @@
                             <label class="form-label">
                                 <i class="bi bi-geo-alt"></i> Installation Area <span class="required">*</span>
                             </label>
-                            <div class="file-upload-section" data-category="installation-area">
-                                <div class="file-upload-area" data-category="installation-area">
-                                    <div class="file-upload-icon">
-                                        <i class="bi bi-cloud-upload"></i>
+                            <div class="file-upload-wrapper">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="file-upload-section" data-category="installation-area">
+                                            <div class="file-upload-area" data-category="installation-area">
+                                                <div class="file-upload-icon">
+                                                    <i class="bi bi-cloud-upload"></i>
+                                                </div>
+                                                <div class="file-upload-text">Drag & drop files here or click to browse</div>
+                                                <div class="file-upload-hint">Supported formats: PDF, JPG, PNG</div>
+                                                <input type="file" class="file-input-category" name="installation-area[]" data-category="installation-area" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                                            </div>
+                                            <div class="file-list" data-category="installation-area"></div>
+                                        </div>
                                     </div>
-                                    <div class="file-upload-text">Drag & drop files here or click to browse</div>
-                                    <div class="file-upload-hint">Supported formats: PDF, JPG, PNG</div>
-                                    <input type="file" class="file-input-category" data-category="installation-area" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                                    <div class="col-md-5">
+                                        <div class="sample-image-container">
+                                            <div class="sample-image-label">Sample Photo</div>
+                                            <div class="sample-image-wrapper">
+                                                <img src="" alt="Installation Area Sample" class="sample-image" data-category="installation-area">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="file-list" data-category="installation-area"></div>
                             </div>
                         </div>
 
@@ -973,16 +1363,30 @@
                             <label class="form-label">
                                 <i class="bi bi-signpost"></i> Electrical panel going to the Charger Location <span class="required">*</span>
                             </label>
-                            <div class="file-upload-section" data-category="charger-location">
-                                <div class="file-upload-area" data-category="charger-location">
-                                    <div class="file-upload-icon">
-                                        <i class="bi bi-cloud-upload"></i>
+                            <div class="file-upload-wrapper">
+                                <div class="row">
+                                    <div class="col-md-7">
+                                        <div class="file-upload-section" data-category="charger-location">
+                                            <div class="file-upload-area" data-category="charger-location">
+                                                <div class="file-upload-icon">
+                                                    <i class="bi bi-cloud-upload"></i>
+                                                </div>
+                                                <div class="file-upload-text">Drag & drop files here or click to browse</div>
+                                                <div class="file-upload-hint">Supported formats: PDF, JPG, PNG</div>
+                                                <input type="file" class="file-input-category" name="charger-location[]" data-category="charger-location" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                                            </div>
+                                            <div class="file-list" data-category="charger-location"></div>
+                                        </div>
                                     </div>
-                                    <div class="file-upload-text">Drag & drop files here or click to browse</div>
-                                    <div class="file-upload-hint">Supported formats: PDF, JPG, PNG</div>
-                                    <input type="file" class="file-input-category" data-category="charger-location" multiple accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                                    <div class="col-md-5">
+                                        <div class="sample-image-container">
+                                            <div class="sample-image-label">Sample Photo</div>
+                                            <div class="sample-image-wrapper">
+                                                <img src="" alt="Charger Location Sample" class="sample-image" data-category="charger-location">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="file-list" data-category="charger-location"></div>
                             </div>
                         </div>
 
@@ -1058,12 +1462,40 @@
         </div>
     </div>
 
+    <!-- Image Modal -->
+    <div id="imageModal" class="image-modal">
+        <div class="image-modal-backdrop"></div>
+        <span class="image-modal-close">&times;</span>
+        <div class="image-modal-content">
+            <img id="modalImage" src="" alt="Full size image">
+        </div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Submitting Estimate...</div>
+        <div class="loading-subtext">Please wait while we process your request</div>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Submitting Estimate...</div>
+        <div class="loading-subtext">Please wait while we process your request</div>
+    </div>
+
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
+        // Define base_url for AJAX calls
+        var base_url = '<?php echo base_url(); ?>';
+        
         $(document).ready(function() {
             let currentStep = 1;
             const totalSteps = 4;
@@ -1072,6 +1504,18 @@
                 'installation-area': [],
                 'charger-location': []
             };
+
+            // Clear validation errors on input
+            $('input, select, textarea').on('input change', function() {
+                $(this).removeClass('is-invalid');
+                $(this).next('.invalid-feedback').hide();
+            });
+
+            // Clear charger model validation when selected
+            $(document).on('click', '.modern-select-option', function() {
+                $('#chargerModelInput').removeClass('is-invalid');
+                $('#chargerModelWrapper').next('.invalid-feedback').hide();
+            });
 
             // Duke Rebate Toggle
             $('input[name="dukeRebate"]').on('change', function() {
@@ -1084,9 +1528,18 @@
             });
 
             // File Upload Handling with Categories
-            $('.file-upload-area').on('click', function() {
-                const category = $(this).data('category');
-                $(`.file-input-category[data-category="${category}"]`).click();
+            $(document).on('click', '.file-upload-area', function(e) {
+                // Only trigger if not clicking on a child element that has its own handler
+                if ($(e.target).hasClass('file-upload-area') || 
+                    $(e.target).closest('.file-upload-icon, .file-upload-text, .file-upload-hint').length > 0) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const category = $(this).data('category');
+                    const fileInput = $(`.file-input-category[data-category="${category}"]`)[0];
+                    if (fileInput) {
+                        fileInput.click();
+                    }
+                }
             });
 
             $('.file-upload-area').on('dragover', function(e) {
@@ -1112,14 +1565,40 @@
             });
 
             function handleFiles(files, category) {
+                const fileInput = $(`.file-input-category[data-category="${category}"]`)[0];
+                const dataTransfer = new DataTransfer();
+                
+                // Add existing files from the input
+                if (fileInput && fileInput.files) {
+                    Array.from(fileInput.files).forEach(file => {
+                        dataTransfer.items.add(file);
+                    });
+                }
+                
+                // Add existing files from uploadedFiles array
+                uploadedFiles[category].forEach(file => {
+                    dataTransfer.items.add(file);
+                });
+                
                 Array.from(files).forEach(file => {
                     if (file.size > 10 * 1024 * 1024) {
-                        alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'File Too Large',
+                            text: `File ${file.name} is too large. Maximum size is 10MB.`,
+                            confirmButtonColor: '#F2A61D'
+                        });
                         return;
                     }
                     uploadedFiles[category].push(file);
+                    dataTransfer.items.add(file);
                     displayFile(file, category);
                 });
+                
+                // Update the file input with all files
+                if (fileInput) {
+                    fileInput.files = dataTransfer.files;
+                }
             }
 
             function displayFile(file, category) {
@@ -1148,6 +1627,17 @@
                     const fileCategory = $(this).data('category');
                     uploadedFiles[fileCategory] = uploadedFiles[fileCategory].filter(f => f.name !== fileName);
                     fileItem.remove();
+                    
+                    // Sync with file input
+                    const fileInput = $(`.file-input-category[data-category="${fileCategory}"]`)[0];
+                    if (fileInput) {
+                        const dataTransfer = new DataTransfer();
+                        uploadedFiles[fileCategory].forEach(file => {
+                            dataTransfer.items.add(file);
+                        });
+                        fileInput.files = dataTransfer.files;
+                    }
+                    
                     updateSummary();
                 });
             }
@@ -1211,10 +1701,260 @@
                     $('#nextBtn').removeClass('hidden');
                     $('#submitBtn').addClass('hidden');
                 }
+
+                // Load sample images when step 3 is shown
+                if (step === 3) {
+                    loadSampleImages();
+                }
+            }
+
+            function loadSampleImages() {
+                $.ajax({
+                    url: base_url + 'getSampleImages',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success && response.images) {
+                            // Update each image based on its category
+                            $('.sample-image[data-category="electrical-panel"]').attr('src', response.images.electrical_panel || '');
+                            $('.sample-image[data-category="installation-area"]').attr('src', response.images.installation_area || '');
+                            $('.sample-image[data-category="charger-location"]').attr('src', response.images.charger_location || '');
+                        } else {
+                            console.error('Failed to load sample images:', response.message || 'Unknown error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX error loading sample images:', error);
+                        // Fallback to placeholder images on error
+                        $('.sample-image[data-category="electrical-panel"]').attr('src', 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=400&h=300&fit=crop&q=80');
+                        $('.sample-image[data-category="installation-area"]').attr('src', 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop&q=80');
+                        $('.sample-image[data-category="charger-location"]').attr('src', 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=300&fit=crop&q=80');
+                    }
+                });
+            }
+
+            // Image Modal Functionality
+            const imageModal = $('#imageModal');
+            const modalImage = $('#modalImage');
+            const modalClose = $('.image-modal-close');
+            const modalBackdrop = $('.image-modal-backdrop');
+
+            // Open modal when sample image is clicked
+            $(document).on('click', '.sample-image', function() {
+                const imageSrc = $(this).attr('src');
+                const imageAlt = $(this).attr('alt');
+                
+                if (imageSrc && imageSrc.trim() !== '') {
+                    modalImage.attr('src', imageSrc);
+                    modalImage.attr('alt', imageAlt);
+                    imageModal.addClass('active');
+                    $('body').css('overflow', 'hidden'); // Prevent background scrolling
+                }
+            });
+
+            // Close modal functions
+            function closeImageModal() {
+                imageModal.removeClass('active');
+                $('body').css('overflow', ''); // Restore scrolling
+            }
+
+            // Close on close button click
+            modalClose.on('click', function() {
+                closeImageModal();
+            });
+
+            // Close on backdrop click
+            modalBackdrop.on('click', function() {
+                closeImageModal();
+            });
+
+            // Close on Escape key press
+            $(document).on('keydown', function(e) {
+                if (e.key === 'Escape' && imageModal.hasClass('active')) {
+                    closeImageModal();
+                }
+            });
+
+            // Validation Functions
+            function validateStep1() {
+                let isValid = true;
+                const errors = [];
+
+                // First Name
+                const firstName = $('input[name="firstName"]').val().trim();
+                if (!firstName) {
+                    $('input[name="firstName"]').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('input[name="firstName"]').removeClass('is-invalid');
+                }
+
+                // Last Name
+                const lastName = $('input[name="lastName"]').val().trim();
+                if (!lastName) {
+                    $('input[name="lastName"]').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('input[name="lastName"]').removeClass('is-invalid');
+                }
+
+                // Email
+                const email = $('input[name="email"]').val().trim();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!email) {
+                    $('input[name="email"]').addClass('is-invalid');
+                    isValid = false;
+                } else if (!emailRegex.test(email)) {
+                    $('input[name="email"]').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('input[name="email"]').removeClass('is-invalid');
+                }
+
+                // Phone
+                const phone = $('input[name="phone"]').val().trim();
+                if (!phone) {
+                    $('input[name="phone"]').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('input[name="phone"]').removeClass('is-invalid');
+                }
+
+                // Address
+                const address = $('textarea[name="address"]').val().trim();
+                if (!address) {
+                    $('textarea[name="address"]').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('textarea[name="address"]').removeClass('is-invalid');
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Validation Error',
+                        text: 'Please fill in all required fields correctly.',
+                        confirmButtonColor: '#F2A61D'
+                    });
+                }
+
+                return isValid;
+            }
+
+            function validateStep2() {
+                let isValid = true;
+
+                // Project Type
+                const projectType = $('select[name="projectType"]').val();
+                if (!projectType) {
+                    $('select[name="projectType"]').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('select[name="projectType"]').removeClass('is-invalid');
+                }
+
+                // Timeline
+                const timeline = $('select[name="timeline"]').val();
+                if (!timeline) {
+                    $('select[name="timeline"]').addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $('select[name="timeline"]').removeClass('is-invalid');
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Validation Error',
+                        text: 'Please fill in all required fields.',
+                        confirmButtonColor: '#F2A61D'
+                    });
+                }
+
+                return isValid;
+            }
+
+            function validateStep3() {
+                let isValid = true;
+
+                // Charger Model
+                const chargerModelId = $('#chargerModelId').val();
+                if (!chargerModelId || chargerModelId === '') {
+                    $('#chargerModelInput').addClass('is-invalid');
+                    $('#chargerModelWrapper').next('.invalid-feedback').show();
+                    isValid = false;
+                } else {
+                    $('#chargerModelInput').removeClass('is-invalid');
+                    $('#chargerModelWrapper').next('.invalid-feedback').hide();
+                }
+
+                // Duke Rebate
+                const dukeRebate = $('input[name="dukeRebate"]:checked').val();
+                if (!dukeRebate) {
+                    isValid = false;
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Validation Error',
+                        text: 'Please select whether you are interested in the Duke rebate program.',
+                        confirmButtonColor: '#F2A61D'
+                    });
+                }
+
+                // If Duke Rebate is Yes, validate additional questions
+                if (dukeRebate === 'yes') {
+                    const rentingHome = $('input[name="rentingHome"]:checked').val();
+                    const dukeCustomer = $('input[name="dukeCustomer"]:checked').val();
+                    const evRegistered = $('input[name="evRegistered"]:checked').val();
+
+                    if (!rentingHome || !dukeCustomer || !evRegistered) {
+                        isValid = false;
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Validation Error',
+                            text: 'Please answer all Duke rebate questions.',
+                            confirmButtonColor: '#F2A61D'
+                        });
+                    }
+                }
+
+                // File uploads validation
+                const totalFiles = uploadedFiles['electrical-panel'].length + 
+                                 uploadedFiles['installation-area'].length + 
+                                 uploadedFiles['charger-location'].length;
+
+                if (totalFiles === 0) {
+                    isValid = false;
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Files Required',
+                        text: 'Please upload at least one file for the required categories.',
+                        confirmButtonColor: '#F2A61D'
+                    });
+                }
+
+                if (!isValid && chargerModelId) {
+                    $('#chargerModelInput').removeClass('is-invalid');
+                }
+
+                return isValid;
             }
 
             $('#nextBtn').on('click', function() {
-                showStep(currentStep + 1);
+                let canProceed = false;
+
+                if (currentStep === 1) {
+                    canProceed = validateStep1();
+                } else if (currentStep === 2) {
+                    canProceed = validateStep2();
+                } else if (currentStep === 3) {
+                    canProceed = validateStep3();
+                } else {
+                    canProceed = true;
+                }
+
+                if (canProceed) {
+                    showStep(currentStep + 1);
+                }
             });
 
             $('#prevBtn').on('click', function() {
@@ -1325,32 +2065,260 @@
             $('#estimateForm').on('submit', function(e) {
                 e.preventDefault();
 
-                // Generate ticket number
-                const ticketNumber = generateTicketNumber();
-                
-                // Hide form and show success page
-                $('#estimateForm').closest('.form-body').find('form').hide();
-                $('.progress-bar-container').hide();
-                $('.form-header').hide();
-                $('#successPage').addClass('active');
-                
-                // Set ticket number
-                $('#ticketNumber').text(ticketNumber);
-                
-                // Scroll to top of success page
-                $('html, body').animate({
-                    scrollTop: $('.form-container').offset().top - 100
-                }, 500);
+                // Check if terms are agreed
+                if (!$('#agreeTerms').is(':checked')) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Terms Required',
+                        text: 'Please agree to the terms and conditions to continue.',
+                        confirmButtonColor: '#F2A61D'
+                    });
+                    return;
+                }
 
-                // Here you would normally submit to backend with the ticket number
-                // For prototype, we're just showing the success page
-                console.log('Form submitted with ticket number:', ticketNumber);
+                // Show loading screen
+                $('#loadingScreen').addClass('active');
+                $('body').css('overflow', 'hidden');
+
+                // Prepare FormData - files should already be in the file inputs
+                const formData = new FormData($('#estimateForm')[0]);
+
+                // Submit via AJAX
+                $.ajax({
+                    url: base_url + 'submitEstimate',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        // Hide loading screen
+                        $('#loadingScreen').removeClass('active');
+                        $('body').css('overflow', '');
+
+                        if (response.success) {
+                            // Hide form and show success page
+                            $('#estimateForm').closest('.form-body').find('form').hide();
+                            $('.progress-bar-container').hide();
+                            $('.form-header').hide();
+                            $('#successPage').addClass('active');
+                            
+                            // Set ticket number
+                            $('#ticketNumber').text(response.estimate_number);
+                            
+                            // Scroll to top of success page
+                            $('html, body').animate({
+                                scrollTop: $('.form-container').offset().top - 100
+                            }, 500);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Submission Failed',
+                                text: response.message || 'Failed to submit estimate. Please try again.',
+                                confirmButtonColor: '#F2A61D'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Submission error:', error);
+                        // Hide loading screen
+                        $('#loadingScreen').removeClass('active');
+                        $('body').css('overflow', '');
+                        
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while submitting your estimate. Please try again.',
+                            confirmButtonColor: '#F2A61D'
+                        });
+                    }
+                });
+            });
+
+            // Modern Searchable Select for Charger Models
+            let chargerModelSearchTimeout;
+            let allChargerModels = [];
+            let selectedChargerModel = null;
+
+            const chargerModelInput = $('#chargerModelInput');
+            const chargerModelDropdown = $('#chargerModelDropdown');
+            const chargerModelWrapper = $('#chargerModelWrapper');
+            const chargerModelIdInput = $('#chargerModelId');
+
+            // Load charger models on page load
+            function loadChargerModels(search = '') {
+                $.ajax({
+                    url: base_url + 'getChargerModels',
+                    type: 'GET',
+                    data: { search: search },
+                    dataType: 'json',
+                    success: function(response) {
+
+                        console.log(response);
+                        if (response.success && response.models) {
+                            allChargerModels = response.models;
+                            renderChargerModelOptions(response.models, search);
+                        }
+                    },
+                    error: function() {
+                        chargerModelDropdown.html('<div class="modern-select-option no-results">Error loading models</div>');
+                    }
+                });
+            }
+
+            function renderChargerModelOptions(models, search = '') {
+                chargerModelDropdown.empty();
+                
+                if (models.length === 0) {
+                    if (search.trim() !== '') {
+                        chargerModelDropdown.append(`
+                            <div class="modern-select-add-new" data-action="add-new" data-model-name="${search}">
+                                <i class="bi bi-plus-circle"></i> Add "${search}" as new model
+                            </div>
+                        `);
+                    } else {
+                        chargerModelDropdown.append('<div class="modern-select-option no-results">No models found</div>');
+                    }
+                } else {
+                    models.forEach(function(model) {
+                        const option = $('<div class="modern-select-option"></div>')
+                            .text(model.display_name)
+                            .data('model', model);
+                        
+                        if (selectedChargerModel && selectedChargerModel.id === model.id) {
+                            option.addClass('selected');
+                        }
+                        
+                        chargerModelDropdown.append(option);
+                    });
+                    
+                    // Add option to create new if search doesn't match
+                    if (search.trim() !== '' && !models.some(m => 
+                        m.model_name.toLowerCase() === search.toLowerCase() || 
+                        m.display_name.toLowerCase() === search.toLowerCase()
+                    )) {
+                        chargerModelDropdown.append(`
+                            <div class="modern-select-add-new" data-action="add-new" data-model-name="${search}">
+                                <i class="bi bi-plus-circle"></i> Add "${search}" as new model
+                            </div>
+                        `);
+                    }
+                }
+            }
+
+            // Handle input focus
+            chargerModelInput.on('focus', function() {
+                chargerModelWrapper.addClass('active');
+                if (chargerModelDropdown.children().length === 0 || 
+                    chargerModelDropdown.find('.no-results').text() === 'Loading models...') {
+                    loadChargerModels();
+                } else {
+                    chargerModelDropdown.addClass('active');
+                }
+            });
+
+            // Handle input typing
+            chargerModelInput.on('input', function() {
+                const search = $(this).val();
+                chargerModelWrapper.addClass('active');
+                
+                clearTimeout(chargerModelSearchTimeout);
+                chargerModelSearchTimeout = setTimeout(function() {
+                    loadChargerModels(search);
+                    chargerModelDropdown.addClass('active');
+                }, 300);
+            });
+
+            // Handle option click
+            $(document).on('click', '.modern-select-option', function() {
+                const model = $(this).data('model');
+                if (model) {
+                    selectedChargerModel = model;
+                    chargerModelInput.val(model.display_name).addClass('has-value');
+                    chargerModelIdInput.val(model.id);
+                    chargerModelDropdown.removeClass('active');
+                    chargerModelWrapper.removeClass('active');
+                    $('.modern-select-option').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+
+            // Handle add new model
+            $(document).on('click', '.modern-select-add-new', function() {
+                const modelName = $(this).data('model-name');
+                
+                // Show loading state
+                Swal.fire({
+                    title: 'Adding Model...',
+                    text: 'Please wait',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                $.ajax({
+                    url: base_url + 'addChargerModel',
+                    type: 'POST',
+                    data: {
+                        model_name: modelName,
+                        brand: ''
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            selectedChargerModel = response.model;
+                            chargerModelInput.val(response.model.display_name).addClass('has-value');
+                            chargerModelIdInput.val(response.model.id);
+                            chargerModelDropdown.removeClass('active');
+                            chargerModelWrapper.removeClass('active');
+                            
+                            // Reload models to include the new one
+                            loadChargerModels();
+                            
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Model Added',
+                                text: `"${response.model.display_name}" has been added successfully.`,
+                                timer: 2000,
+                                showConfirmButton: false,
+                                confirmButtonColor: '#F2A61D'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: response.message || 'Failed to add model',
+                                confirmButtonColor: '#F2A61D'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Error adding charger model. Please try again.',
+                            confirmButtonColor: '#F2A61D'
+                        });
+                    }
+                });
+            });
+
+            // Close dropdown when clicking outside
+            $(document).on('click', function(e) {
+                if (!chargerModelWrapper.is(e.target) && chargerModelWrapper.has(e.target).length === 0) {
+                    chargerModelDropdown.removeClass('active');
+                    chargerModelWrapper.removeClass('active');
+                }
             });
 
             // Initialize - ensure buttons are in correct state on load
             $('#submitBtn').addClass('hidden');
             $('#nextBtn').removeClass('hidden');
             showStep(1);
+            
+            // Load initial charger models
+            loadChargerModels();
         });
     </script>
 </body>

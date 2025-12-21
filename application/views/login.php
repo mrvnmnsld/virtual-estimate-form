@@ -266,7 +266,10 @@
             <!-- Header -->
             <div class="login-header">
                 <div class="login-logo">
-                    <img src="<?php echo base_url('assets/img/logo.webp'); ?>" alt="Logo">
+                    <img src="<?php echo base_url('assets/img/logo.webp'); ?>" alt="Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display: none; width: 80px; height: 80px; background: var(--primary-color); border-radius: 50%; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem; margin: 0 auto;">
+                        VE
+                    </div>
                 </div>
                 <h1><i class="bi bi-shield-lock"></i> Admin Login</h1>
                 <p>Access the admin dashboard</p>
@@ -378,7 +381,23 @@
                         }
                     },
                     error: function(xhr, status, error) {
-                        showAlert('An error occurred. Please try again later.', 'danger');
+                        let errorMessage = 'An error occurred. Please try again later.';
+                        
+                        // Try to parse error response
+                        if (xhr.responseJSON && xhr.responseJSON.msg) {
+                            errorMessage = xhr.responseJSON.msg;
+                        } else if (xhr.responseText) {
+                            try {
+                                const response = JSON.parse(xhr.responseText);
+                                if (response.msg) {
+                                    errorMessage = response.msg;
+                                }
+                            } catch (e) {
+                                // Keep default error message
+                            }
+                        }
+                        
+                        showAlert(errorMessage, 'danger');
                         loginBtn.prop('disabled', false).removeClass('loading');
                         loginBtn.html('<i class="bi bi-box-arrow-in-right"></i> Login');
                     }

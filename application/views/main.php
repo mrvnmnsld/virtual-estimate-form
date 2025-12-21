@@ -59,11 +59,34 @@
             object-fit: contain;
         }
 
+        .navbar-brand img[src=""],
+        .navbar-brand img:not([src]) {
+            display: none;
+        }
+
+        .login-logo img[src=""],
+        .login-logo img:not([src]) {
+            display: none;
+        }
+
         .navbar-brand .logo-icon {
             width: 40px;
             height: 40px;
             background: var(--primary-color);
             border-radius: 8px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-right: 10px;
+        }
+
+        .navbar-brand .logo-icon[style*="display: flex"],
+        .navbar-brand .logo-icon[style*="display:flex"] {
+            display: flex !important;
+        }
             display: flex;
             align-items: center;
             justify-content: center;
@@ -487,7 +510,8 @@
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
             <a class="navbar-brand" href="<?php echo base_url(); ?>">
-                <img src="<?php echo base_url('assets/img/logo.webp'); ?>" alt="Virtual Estimator Logo" class="logo-img">
+                <img src="<?php echo base_url('assets/img/logo.webp'); ?>" alt="Virtual Estimator Logo" class="logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="logo-icon" style="display: none;">VE</div>
                 <span>Virtual Estimator</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

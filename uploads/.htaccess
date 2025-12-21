@@ -1,0 +1,8 @@
+# Protect uploads directory
+Options -Indexes
+
+# Allow access to files
+<FilesMatch "\.(jpg|jpeg|png|pdf)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
