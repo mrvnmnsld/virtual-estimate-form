@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Virtual Estimate Form - Create Estimate</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -13,7 +14,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --primary-color: #F2A61D;
@@ -197,6 +198,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -219,7 +221,8 @@
             margin-left: 3px;
         }
 
-        .form-control, .form-select {
+        .form-control,
+        .form-select {
             border: 2px solid var(--border-color);
             border-radius: 8px;
             padding: 0.875rem 1.25rem;
@@ -228,7 +231,8 @@
             background: white;
         }
 
-        .form-control:focus, .form-select:focus {
+        .form-control:focus,
+        .form-select:focus {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 4px rgba(242, 166, 29, 0.1);
             outline: none;
@@ -462,6 +466,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -472,6 +477,7 @@
                 transform: scale(0.8);
                 opacity: 0;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
@@ -621,6 +627,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -644,13 +651,15 @@
             font-size: 1rem;
         }
 
-        .btn-next, .btn-submit {
+        .btn-next,
+        .btn-submit {
             background: var(--primary-color);
             color: white;
             font-weight: 600;
         }
 
-        .btn-next:hover, .btn-submit:hover {
+        .btn-next:hover,
+        .btn-submit:hover {
             background: #d4941a;
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(242, 166, 29, 0.4);
@@ -793,6 +802,7 @@
                 transform: scale(0);
                 opacity: 0;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
@@ -918,8 +928,8 @@
             color: #ef4444;
         }
 
-        .form-control.is-invalid ~ .invalid-feedback,
-        .form-select.is-invalid ~ .invalid-feedback {
+        .form-control.is-invalid~.invalid-feedback,
+        .form-select.is-invalid~.invalid-feedback {
             display: block;
         }
 
@@ -985,6 +995,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="form-container">
@@ -1000,18 +1011,22 @@
                     <div class="progress-line" id="progressLine"></div>
                     <div class="step-item active" data-step="1">
                         <div class="step-circle">1</div>
-                        <div class="step-label">Personal Info</div>
+                        <div class="step-label">Service Area</div>
                     </div>
                     <div class="step-item" data-step="2">
                         <div class="step-circle">2</div>
-                        <div class="step-label">Project Details</div>
+                        <div class="step-label">Personal Info</div>
                     </div>
                     <div class="step-item" data-step="3">
                         <div class="step-circle">3</div>
-                        <div class="step-label">Charger & Files</div>
+                        <div class="step-label">Project Details</div>
                     </div>
                     <div class="step-item" data-step="4">
                         <div class="step-circle">4</div>
+                        <div class="step-label">Charger & Files</div>
+                    </div>
+                    <div class="step-item" data-step="5">
+                        <div class="step-circle">5</div>
                         <div class="step-label">Review & Submit</div>
                     </div>
                 </div>
@@ -1028,7 +1043,7 @@
                     <p class="success-message">
                         Thank you for submitting your virtual estimate request. We have received your information and will process it shortly.
                     </p>
-                    
+
                     <div class="ticket-number-box">
                         <div class="ticket-label">Your Ticket Number</div>
                         <div class="ticket-number" id="ticketNumber">-</div>
@@ -1051,10 +1066,46 @@
                 </div>
 
                 <form id="estimateForm">
-                    <!-- Step 1: Personal Information -->
+                    <!-- Step 1: Service Area -->
                     <div class="form-step active" id="step1">
+                        <h3 class="mb-4"><i class="bi bi-geo-alt"></i> Service Area</h3>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Select Your City <span class="required">*</span>
+                            </label>
+                            <select class="form-select" name="city" id="citySelect">
+                                <option value="">Select your city...</option>
+                                <option value="Cary">Cary</option>
+                                <option value="Apex">Apex</option>
+                                <option value="Morrisville">Morrisville</option>
+                                <option value="Holly Springs">Holly Springs</option>
+                                <option value="Knightdale">Knightdale</option>
+                                <option value="Fuquay-Varina">Fuquay-Varina</option>
+                                <option value="Durham">Durham</option>
+                                <option value="Garner">Garner</option>
+                                <option value="New Hill">New Hill</option>
+                                <option value="Wake County">Wake County</option>
+                                <option value="Raleigh">Raleigh</option>
+                                <option value="Chatham County">Chatham County</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <div class="invalid-feedback">Please select your city.</div>
+                        </div>
+
+                        <!-- Non-serviceable area message -->
+                        <div id="nonServiceableMessage" style="display: none;">
+                            <div class="alert alert-warning">
+                                <i class="bi bi-exclamation-triangle-fill"></i> <strong>Service Area Notice</strong>
+                                <p class="mb-0 mt-2">We apologize, but your area is not currently serviceable. We will keep you posted once other areas become serviceable. Thank you for your interest!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Personal Information -->
+                    <div class="form-step" id="step2">
                         <h3 class="mb-4"><i class="bi bi-person"></i> Personal Information</h3>
-                        
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -1112,23 +1163,97 @@
                         </div>
                     </div>
 
-                    <!-- Step 2: Project Details -->
-                    <div class="form-step" id="step2">
+                    <!-- Step 3: Project Details -->
+                    <div class="form-step" id="step3">
                         <h3 class="mb-4"><i class="bi bi-clipboard-data"></i> Project Details</h3>
-                        
+
                         <div class="form-group">
                             <label class="form-label">
                                 Project Type <span class="required">*</span>
                             </label>
-                            <select class="form-select" name="projectType">
+                            <select class="form-select" name="projectType" id="projectTypeSelect">
                                 <option value="">Select project type...</option>
                                 <option value="residential">Residential</option>
                                 <option value="commercial">Commercial</option>
-                                <option value="industrial">Industrial</option>
-                                <option value="renovation">Renovation</option>
-                                <option value="other">Other</option>
                             </select>
                             <div class="invalid-feedback">Project type is required.</div>
+                        </div>
+
+                        <!-- Garage and Installation Questions (only for residential) -->
+                        <div id="garageQuestions" style="display: none;">
+                            <hr class="my-4">
+                            <h5 class="mb-3" style="color: var(--secondary-color); font-weight: 600;">Garage & Installation Details</h5>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Is the garage attached to the house? <span class="required">*</span>
+                                </label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="garageAttached" id="garageAttachedYes" value="yes">
+                                    <label class="form-check-label" for="garageAttachedYes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="garageAttached" id="garageAttachedNo" value="no">
+                                    <label class="form-check-label" for="garageAttachedNo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Is the electrical panel within the garage? <span class="required">*</span>
+                                </label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="panelInGarage" id="panelInGarageYes" value="yes">
+                                    <label class="form-check-label" for="panelInGarageYes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="panelInGarage" id="panelInGarageNo" value="no">
+                                    <label class="form-check-label" for="panelInGarageNo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Is the installation location of the EV charger inside the garage? <span class="required">*</span>
+                                </label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="chargerInGarage" id="chargerInGarageYes" value="yes">
+                                    <label class="form-check-label" for="chargerInGarageYes">
+                                        Yes
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="chargerInGarage" id="chargerInGarageNo" value="no">
+                                    <label class="form-check-label" for="chargerInGarageNo">
+                                        No
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Physical Visit Required Message -->
+                        <div id="physicalVisitMessage" style="display: none;">
+                            <div class="alert alert-info mt-4">
+                                <i class="bi bi-info-circle-fill"></i> <strong>Physical Visit Required</strong>
+                                <p class="mb-2 mt-2">Based on your project details, we need to schedule a physical visit for an accurate estimate.</p>
+                                <p class="mb-2">Please fill out the form at the link below to automatically create a ticket and send a technician for a physical visit:</p>
+                                <p class="mb-0">
+                                    <a href="https://book.housecallpro.com/book/Triad-Electrical-Services/166e4f41abf843ef9f701b1671e4fe3d?v2=true"
+                                        target="_blank"
+                                        class="btn btn-primary"
+                                        style="background: var(--primary-color); border: none; color: white; font-weight: 600;">
+                                        <i class="bi bi-calendar-check"></i> Schedule Physical Visit
+                                    </a>
+                                </p>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -1160,23 +1285,23 @@
                         </div>
                     </div>
 
-                    <!-- Step 3: File Upload & Charger Details -->
-                    <div class="form-step" id="step3">
+                    <!-- Step 4: File Upload & Charger Details -->
+                    <div class="form-step" id="step4">
                         <h3 class="mb-4"><i class="bi bi-cloud-upload"></i> Charger Details & File Upload</h3>
-                        
+
                         <!-- Charger Model -->
                         <div class="form-group">
                             <label class="form-label">
                                 Model of the Charger <span class="required">*</span>
                             </label>
                             <div class="modern-select-wrapper" id="chargerModelWrapper">
-                                <input type="text" 
-                                       class="modern-select-input form-control" 
-                                       id="chargerModelInput" 
-                                       name="chargerModel" 
-                                       placeholder="Search or type to add new model..."
-                                       autocomplete="off"
-                                       data-selected-id="">
+                                <input type="text"
+                                    class="modern-select-input form-control"
+                                    id="chargerModelInput"
+                                    name="chargerModel"
+                                    placeholder="Search or type to add new model..."
+                                    autocomplete="off"
+                                    data-selected-id="">
                                 <i class="bi bi-chevron-down modern-select-icon"></i>
                                 <div class="modern-select-dropdown" id="chargerModelDropdown">
                                     <div class="modern-select-option no-results">Loading models...</div>
@@ -1272,16 +1397,16 @@
                                 <div class="mt-3">
                                     <p><strong>Installation & Payment Process:</strong></p>
                                     <p>Upon completion of your installation, your new charger will be fully operational and ready for use. We accept payment on-site via cash, check, or card.</p>
-                                    
+
                                     <p class="mt-3"><strong>Permit & Inspection Process:</strong></p>
                                     <p>Our team will handle the city permit application and all associated fees on your behalf. Please disregard any emails from the city regarding permits, as we have this process covered. Within two weeks of your installation date, we will contact you to schedule your city inspection.</p>
-                                    
+
                                     <p class="mt-3"><strong>Rebate Application Process:</strong></p>
                                     <p>Once the inspection is complete, you will receive an email from us containing two forms needed for your Duke rebate submission. After receiving this email, you will simply complete the online Duke application. Duke Energy will then review your application and mail you the rebate check.</p>
-                                    
+
                                     <p class="mt-3"><strong>What You Need to Know:</strong></p>
                                     <p>While this process involves several steps, you don't need to take any action until you receive the final email from us after the inspection is complete. We will manage every other step throughout the process.</p>
-                                    
+
                                     <p class="mt-3"><strong>Installation Pricing:</strong></p>
                                     <p>For this installation, we can complete the work for the Duke rebate maximum of $1,117. We will need the charger to be on-site, and we will take care of everything else.</p>
                                 </div>
@@ -1395,10 +1520,10 @@
                         </div>
                     </div>
 
-                    <!-- Step 4: Review & Submit -->
-                    <div class="form-step" id="step4">
+                    <!-- Step 5: Review & Submit -->
+                    <div class="form-step" id="step5">
                         <h3 class="mb-4"><i class="bi bi-check-circle"></i> Review & Submit</h3>
-                        
+
                         <div class="alert alert-success">
                             <i class="bi bi-check-circle-fill"></i> Please review your information before submitting.
                         </div>
@@ -1491,19 +1616,74 @@
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <script>
         // Define base_url for AJAX calls
         var base_url = '<?php echo base_url(); ?>';
-        
+
         $(document).ready(function() {
             let currentStep = 1;
-            const totalSteps = 4;
+            const totalSteps = 5;
             let uploadedFiles = {
                 'electrical-panel': [],
                 'installation-area': [],
                 'charger-location': []
             };
+
+            // City selection handler
+            $('#citySelect').on('change', function() {
+                const selectedCity = $(this).val();
+                if (selectedCity === 'Others') {
+                    $('#nonServiceableMessage').slideDown(300);
+                    // Disable next button
+                    $('#nextBtn').prop('disabled', true).css('opacity', '0.5');
+                } else {
+                    $('#nonServiceableMessage').slideUp(300);
+                    $('#nextBtn').prop('disabled', false).css('opacity', '1');
+                }
+                $(this).removeClass('is-invalid');
+            });
+
+            // Project type change handler
+            $('#projectTypeSelect').on('change', function() {
+                const projectType = $(this).val();
+                if (projectType === 'residential') {
+                    $('#garageQuestions').slideDown(300);
+                    $('#nextBtn').prop('disabled', false).css('opacity', '1');
+
+                } else {
+                    $('#garageQuestions').slideUp(300);
+                    $('#nextBtn').prop('disabled', true).css('opacity', '0.5');
+                    // Reset garage questions
+                    $('#garageQuestions input[type="radio"]').prop('checked', false);
+                }
+                checkPhysicalVisitRequired();
+            });
+
+            // Garage questions change handlers
+            $('input[name="garageAttached"], input[name="panelInGarage"], input[name="chargerInGarage"]').on('change', function() {
+                checkPhysicalVisitRequired();
+            });
+
+            function checkPhysicalVisitRequired() {
+                const projectType = $('#projectTypeSelect').val();
+                const garageAttached = $('input[name="garageAttached"]:checked').val();
+                const panelInGarage = $('input[name="panelInGarage"]:checked').val();
+                const chargerInGarage = $('input[name="chargerInGarage"]:checked').val();
+
+                // Show message if commercial OR if any garage question is answered "no"
+                if (projectType === 'commercial' ||
+                    (projectType === 'residential' &&
+                        (garageAttached === 'no' || panelInGarage === 'no' || chargerInGarage === 'no'))) {
+                    $('#nextBtn').prop('disabled', true).css('opacity', '0.5');
+
+                    $('#physicalVisitMessage').slideDown(300);
+                } else {
+                    $('#physicalVisitMessage').slideUp(300);
+                    $('#nextBtn').prop('disabled', false).css('opacity', '1');
+
+                }
+            }
 
             // Clear validation errors on input
             $('input, select, textarea').on('input change', function() {
@@ -1530,7 +1710,7 @@
             // File Upload Handling with Categories
             $(document).on('click', '.file-upload-area', function(e) {
                 // Only trigger if not clicking on a child element that has its own handler
-                if ($(e.target).hasClass('file-upload-area') || 
+                if ($(e.target).hasClass('file-upload-area') ||
                     $(e.target).closest('.file-upload-icon, .file-upload-text, .file-upload-hint').length > 0) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -1567,19 +1747,19 @@
             function handleFiles(files, category) {
                 const fileInput = $(`.file-input-category[data-category="${category}"]`)[0];
                 const dataTransfer = new DataTransfer();
-                
+
                 // Add existing files from the input
                 if (fileInput && fileInput.files) {
                     Array.from(fileInput.files).forEach(file => {
                         dataTransfer.items.add(file);
                     });
                 }
-                
+
                 // Add existing files from uploadedFiles array
                 uploadedFiles[category].forEach(file => {
                     dataTransfer.items.add(file);
                 });
-                
+
                 Array.from(files).forEach(file => {
                     if (file.size > 10 * 1024 * 1024) {
                         Swal.fire({
@@ -1594,7 +1774,7 @@
                     dataTransfer.items.add(file);
                     displayFile(file, category);
                 });
-                
+
                 // Update the file input with all files
                 if (fileInput) {
                     fileInput.files = dataTransfer.files;
@@ -1627,7 +1807,7 @@
                     const fileCategory = $(this).data('category');
                     uploadedFiles[fileCategory] = uploadedFiles[fileCategory].filter(f => f.name !== fileName);
                     fileItem.remove();
-                    
+
                     // Sync with file input
                     const fileInput = $(`.file-input-category[data-category="${fileCategory}"]`)[0];
                     if (fileInput) {
@@ -1637,7 +1817,7 @@
                         });
                         fileInput.files = dataTransfer.files;
                     }
-                    
+
                     updateSummary();
                 });
             }
@@ -1692,7 +1872,7 @@
                     $('#prevBtn').removeClass('hidden');
                 }
 
-                // Only show submit button on final step (step 4)
+                // Only show submit button on final step (step 5)
                 if (currentStep === totalSteps) {
                     $('#nextBtn').addClass('hidden');
                     $('#submitBtn').removeClass('hidden');
@@ -1702,8 +1882,8 @@
                     $('#submitBtn').addClass('hidden');
                 }
 
-                // Load sample images when step 3 is shown
-                if (step === 3) {
+                // Load sample images when step 4 is shown
+                if (step === 4) {
                     loadSampleImages();
                 }
             }
@@ -1743,7 +1923,7 @@
             $(document).on('click', '.sample-image', function() {
                 const imageSrc = $(this).attr('src');
                 const imageAlt = $(this).attr('alt');
-                
+
                 if (imageSrc && imageSrc.trim() !== '') {
                     modalImage.attr('src', imageSrc);
                     modalImage.attr('alt', imageAlt);
@@ -1777,6 +1957,38 @@
 
             // Validation Functions
             function validateStep1() {
+                let isValid = true;
+
+                // City selection
+                const city = $('#citySelect').val();
+                if (!city) {
+                    $('#citySelect').addClass('is-invalid');
+                    isValid = false;
+                } else if (city === 'Others') {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Service Area Notice',
+                        text: 'We apologize, but your area is not currently serviceable. We will keep you posted once other areas become serviceable.',
+                        confirmButtonColor: '#F2A61D'
+                    });
+                    isValid = false;
+                } else {
+                    $('#citySelect').removeClass('is-invalid');
+                }
+
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Validation Error',
+                        text: 'Please select your city.',
+                        confirmButtonColor: '#F2A61D'
+                    });
+                }
+
+                return isValid;
+            }
+
+            function validateStep2() {
                 let isValid = true;
                 const errors = [];
 
@@ -1841,7 +2053,7 @@
                 return isValid;
             }
 
-            function validateStep2() {
+            function validateStep3() {
                 let isValid = true;
 
                 // Project Type
@@ -1862,6 +2074,49 @@
                     $('select[name="timeline"]').removeClass('is-invalid');
                 }
 
+                // Validate garage questions if residential
+                if (projectType === 'residential') {
+                    const garageAttached = $('input[name="garageAttached"]:checked').val();
+                    const panelInGarage = $('input[name="panelInGarage"]:checked').val();
+                    const chargerInGarage = $('input[name="chargerInGarage"]:checked').val();
+
+                    if (!garageAttached || !panelInGarage || !chargerInGarage) {
+                        isValid = false;
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Validation Error',
+                            text: 'Please answer all garage and installation questions.',
+                            confirmButtonColor: '#F2A61D'
+                        });
+                    } else {
+                        // Check if physical visit is required
+                        if (garageAttached === 'no' || panelInGarage === 'no' || chargerInGarage === 'no') {
+                            isValid = false;
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Physical Visit Required',
+                                html: 'Based on your project details, we need to schedule a physical visit for an accurate estimate.<br><br>' +
+                                    'Please fill out the form at the link below to automatically create a ticket and send a technician for a physical visit:<br><br>' +
+                                    '<a href="https://book.housecallpro.com/book/Triad-Electrical-Services/166e4f41abf843ef9f701b1671e4fe3d?v2=true" target="_blank" style="color: #F2A61D; font-weight: 600;">Schedule Physical Visit</a>',
+                                confirmButtonColor: '#F2A61D',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    }
+                } else if (projectType === 'commercial') {
+                    // Commercial projects always require physical visit
+                    isValid = false;
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Physical Visit Required',
+                        html: 'Commercial projects require a physical visit for an accurate estimate.<br><br>' +
+                            'Please fill out the form at the link below to automatically create a ticket and send a technician for a physical visit:<br><br>' +
+                            '<a href="https://book.housecallpro.com/book/Triad-Electrical-Services/166e4f41abf843ef9f701b1671e4fe3d?v2=true" target="_blank" style="color: #F2A61D; font-weight: 600;">Schedule Physical Visit</a>',
+                        confirmButtonColor: '#F2A61D',
+                        confirmButtonText: 'OK'
+                    });
+                }
+
                 if (!isValid) {
                     Swal.fire({
                         icon: 'warning',
@@ -1874,7 +2129,7 @@
                 return isValid;
             }
 
-            function validateStep3() {
+            function validateStep4() {
                 let isValid = true;
 
                 // Charger Model
@@ -1918,9 +2173,9 @@
                 }
 
                 // File uploads validation
-                const totalFiles = uploadedFiles['electrical-panel'].length + 
-                                 uploadedFiles['installation-area'].length + 
-                                 uploadedFiles['charger-location'].length;
+                const totalFiles = uploadedFiles['electrical-panel'].length +
+                    uploadedFiles['installation-area'].length +
+                    uploadedFiles['charger-location'].length;
 
                 if (totalFiles === 0) {
                     isValid = false;
@@ -1948,6 +2203,8 @@
                     canProceed = validateStep2();
                 } else if (currentStep === 3) {
                     canProceed = validateStep3();
+                } else if (currentStep === 4) {
+                    canProceed = validateStep4();
                 } else {
                     canProceed = true;
                 }
@@ -1964,10 +2221,24 @@
 
             function updateSummary() {
                 const formData = new FormData($('#estimateForm')[0]);
+
+                // Add city to summary
+                const city = formData.get('city') || '-';
+                if (!$('#summaryCity').length) {
+                    $('.summary-card').first().before(`
+                        <div class="summary-card">
+                            <div class="summary-label">City</div>
+                            <div class="summary-value" id="summaryCity">${city}</div>
+                        </div>
+                    `);
+                } else {
+                    $('#summaryCity').text(city);
+                }
+
                 $('#summaryName').text((formData.get('firstName') || '') + ' ' + (formData.get('lastName') || ''));
                 $('#summaryEmail').text(formData.get('email') || '-');
                 $('#summaryPhone').text(formData.get('phone') || '-');
-                
+
                 const projectType = formData.get('projectType');
                 const projectTypes = {
                     'residential': 'Residential',
@@ -1977,6 +2248,34 @@
                     'other': 'Other'
                 };
                 $('#summaryProjectType').text(projectTypes[projectType] || '-');
+
+                // Add garage questions to summary if residential
+                if (projectType === 'residential') {
+                    const garageAttached = $('input[name="garageAttached"]:checked').val() || '-';
+                    const panelInGarage = $('input[name="panelInGarage"]:checked').val() || '-';
+                    const chargerInGarage = $('input[name="chargerInGarage"]:checked').val() || '-';
+
+                    if (!$('#summaryGarageDetails').length) {
+                        $('.summary-card').last().after(`
+                            <div class="summary-card" id="summaryGarageDetails">
+                                <div class="summary-label">Garage & Installation Details</div>
+                                <div class="summary-value">
+                                    <div>Garage Attached: ${garageAttached === 'yes' ? 'Yes' : garageAttached === 'no' ? 'No' : '-'}</div>
+                                    <div>Panel in Garage: ${panelInGarage === 'yes' ? 'Yes' : panelInGarage === 'no' ? 'No' : '-'}</div>
+                                    <div>Charger in Garage: ${chargerInGarage === 'yes' ? 'Yes' : chargerInGarage === 'no' ? 'No' : '-'}</div>
+                                </div>
+                            </div>
+                        `);
+                    } else {
+                        $('#summaryGarageDetails .summary-value').html(`
+                            <div>Garage Attached: ${garageAttached === 'yes' ? 'Yes' : garageAttached === 'no' ? 'No' : '-'}</div>
+                            <div>Panel in Garage: ${panelInGarage === 'yes' ? 'Yes' : panelInGarage === 'no' ? 'No' : '-'}</div>
+                            <div>Charger in Garage: ${chargerInGarage === 'yes' ? 'Yes' : chargerInGarage === 'no' ? 'No' : '-'}</div>
+                        `);
+                    }
+                } else {
+                    $('#summaryGarageDetails').remove();
+                }
 
                 const budget = formData.get('budgetRange');
                 const budgets = {
@@ -2019,7 +2318,7 @@
                     const rentingHome = $('input[name="rentingHome"]:checked').val() || '-';
                     const dukeCustomer = $('input[name="dukeCustomer"]:checked').val() || '-';
                     const evRegistered = $('input[name="evRegistered"]:checked').val() || '-';
-                    
+
                     if (!$('#summaryDukeDetails').length) {
                         $('.summary-card').last().after(`
                             <div class="summary-card" id="summaryDukeDetails">
@@ -2043,14 +2342,14 @@
                 }
 
                 // Calculate total files
-                const totalFiles = uploadedFiles['electrical-panel'].length + 
-                                 uploadedFiles['installation-area'].length + 
-                                 uploadedFiles['charger-location'].length;
-                
+                const totalFiles = uploadedFiles['electrical-panel'].length +
+                    uploadedFiles['installation-area'].length +
+                    uploadedFiles['charger-location'].length;
+
                 const filesBreakdown = `Electrical Panel: ${uploadedFiles['electrical-panel'].length}, ` +
-                                     `Installation Area: ${uploadedFiles['installation-area'].length}, ` +
-                                     `Charger Location: ${uploadedFiles['charger-location'].length}`;
-                
+                    `Installation Area: ${uploadedFiles['installation-area'].length}, ` +
+                    `Charger Location: ${uploadedFiles['charger-location'].length}`;
+
                 $('#summaryFiles').text(`${totalFiles} file(s) - ${filesBreakdown}`);
             }
 
@@ -2064,6 +2363,27 @@
             // Form Submission
             $('#estimateForm').on('submit', function(e) {
                 e.preventDefault();
+
+                // Check if physical visit is required
+                const projectType = $('#projectTypeSelect').val();
+                const garageAttached = $('input[name="garageAttached"]:checked').val();
+                const panelInGarage = $('input[name="panelInGarage"]:checked').val();
+                const chargerInGarage = $('input[name="chargerInGarage"]:checked').val();
+
+                if (projectType === 'commercial' ||
+                    (projectType === 'residential' &&
+                        (garageAttached === 'no' || panelInGarage === 'no' || chargerInGarage === 'no'))) {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Physical Visit Required',
+                        html: 'Based on your project details, we need to schedule a physical visit for an accurate estimate.<br><br>' +
+                            'Please fill out the form at the link below to automatically create a ticket and send a technician for a physical visit:<br><br>' +
+                            '<a href="https://book.housecallpro.com/book/Triad-Electrical-Services/166e4f41abf843ef9f701b1671e4fe3d?v2=true" target="_blank" style="color: #F2A61D; font-weight: 600;">Schedule Physical Visit</a>',
+                        confirmButtonColor: '#F2A61D',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
 
                 // Check if terms are agreed
                 if (!$('#agreeTerms').is(':checked')) {
@@ -2102,10 +2422,10 @@
                             $('.progress-bar-container').hide();
                             $('.form-header').hide();
                             $('#successPage').addClass('active');
-                            
+
                             // Set ticket number
                             $('#ticketNumber').text(response.estimate_number);
-                            
+
                             // Scroll to top of success page
                             $('html, body').animate({
                                 scrollTop: $('.form-container').offset().top - 100
@@ -2124,7 +2444,7 @@
                         // Hide loading screen
                         $('#loadingScreen').removeClass('active');
                         $('body').css('overflow', '');
-                        
+
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -2150,7 +2470,9 @@
                 $.ajax({
                     url: base_url + 'getChargerModels',
                     type: 'GET',
-                    data: { search: search },
+                    data: {
+                        search: search
+                    },
                     dataType: 'json',
                     success: function(response) {
 
@@ -2168,7 +2490,7 @@
 
             function renderChargerModelOptions(models, search = '') {
                 chargerModelDropdown.empty();
-                
+
                 if (models.length === 0) {
                     if (search.trim() !== '') {
                         chargerModelDropdown.append(`
@@ -2184,19 +2506,19 @@
                         const option = $('<div class="modern-select-option"></div>')
                             .text(model.display_name)
                             .data('model', model);
-                        
+
                         if (selectedChargerModel && selectedChargerModel.id === model.id) {
                             option.addClass('selected');
                         }
-                        
+
                         chargerModelDropdown.append(option);
                     });
-                    
+
                     // Add option to create new if search doesn't match
-                    if (search.trim() !== '' && !models.some(m => 
-                        m.model_name.toLowerCase() === search.toLowerCase() || 
-                        m.display_name.toLowerCase() === search.toLowerCase()
-                    )) {
+                    if (search.trim() !== '' && !models.some(m =>
+                            m.model_name.toLowerCase() === search.toLowerCase() ||
+                            m.display_name.toLowerCase() === search.toLowerCase()
+                        )) {
                         chargerModelDropdown.append(`
                             <div class="modern-select-add-new" data-action="add-new" data-model-name="${search}">
                                 <i class="bi bi-plus-circle"></i> Add "${search}" as new model
@@ -2209,7 +2531,7 @@
             // Handle input focus
             chargerModelInput.on('focus', function() {
                 chargerModelWrapper.addClass('active');
-                if (chargerModelDropdown.children().length === 0 || 
+                if (chargerModelDropdown.children().length === 0 ||
                     chargerModelDropdown.find('.no-results').text() === 'Loading models...') {
                     loadChargerModels();
                 } else {
@@ -2221,7 +2543,7 @@
             chargerModelInput.on('input', function() {
                 const search = $(this).val();
                 chargerModelWrapper.addClass('active');
-                
+
                 clearTimeout(chargerModelSearchTimeout);
                 chargerModelSearchTimeout = setTimeout(function() {
                     loadChargerModels(search);
@@ -2246,7 +2568,7 @@
             // Handle add new model
             $(document).on('click', '.modern-select-add-new', function() {
                 const modelName = $(this).data('model-name');
-                
+
                 // Show loading state
                 Swal.fire({
                     title: 'Adding Model...',
@@ -2256,7 +2578,7 @@
                         Swal.showLoading();
                     }
                 });
-                
+
                 $.ajax({
                     url: base_url + 'addChargerModel',
                     type: 'POST',
@@ -2272,10 +2594,10 @@
                             chargerModelIdInput.val(response.model.id);
                             chargerModelDropdown.removeClass('active');
                             chargerModelWrapper.removeClass('active');
-                            
+
                             // Reload models to include the new one
                             loadChargerModels();
-                            
+
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Model Added',
@@ -2316,11 +2638,11 @@
             $('#submitBtn').addClass('hidden');
             $('#nextBtn').removeClass('hidden');
             showStep(1);
-            
+
             // Load initial charger models
             loadChargerModels();
         });
     </script>
 </body>
-</html>
 
+</html>
