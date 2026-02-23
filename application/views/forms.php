@@ -871,46 +871,118 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(13, 41, 73, 0.95);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(13, 41, 73, 0.98) 0%, rgba(10, 31, 58, 0.98) 100%);
+            backdrop-filter: blur(15px) saturate(180%);
             z-index: 10000;
             align-items: center;
             justify-content: center;
             flex-direction: column;
+            animation: fadeIn 0.4s ease;
         }
 
-        .loading-screen.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
+        .loading-screen.active,
+        .loading-screen[style*="block"],
+        .loading-screen[style*="flex"] {
+            display: flex !important;
+        }
+
+        .loading-screen-content {
+            text-align: center;
+            padding: 3.5rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+                        0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                        0 0 40px rgba(242, 166, 29, 0.1);
+            max-width: 420px;
+            width: 90%;
+            animation: slideUp 0.5s ease 0.2s both;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .loading-spinner {
-            width: 80px;
-            height: 80px;
-            border: 6px solid rgba(242, 166, 29, 0.2);
+            width: 70px;
+            height: 70px;
+            border: 4px solid rgba(242, 166, 29, 0.15);
             border-top-color: var(--primary-color);
+            border-right-color: var(--primary-color);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 2rem;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 2rem;
+            box-shadow: 0 0 25px rgba(242, 166, 29, 0.4),
+                        inset 0 0 20px rgba(242, 166, 29, 0.1);
+            position: relative;
         }
 
-        .loading-text {
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 600;
-            text-align: center;
-        }
-
-        .loading-subtext {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1rem;
-            margin-top: 1rem;
+        .loading-spinner::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(242, 166, 29, 0.2) 0%, transparent 70%);
         }
 
         @keyframes spin {
             to {
                 transform: rotate(360deg);
             }
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.75rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.9) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+
+        .loading-subtext {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 400;
+            line-height: 1.6;
+            margin-top: 0.5rem;
+        }
+
+        /* Loading dots animation */
+        .loading-dots {
+            display: inline-block;
+            width: 20px;
+            text-align: left;
+        }
+
+        .loading-dots::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
         }
 
         /* Validation Error Styles */
@@ -1596,18 +1668,22 @@
         </div>
     </div>
 
-    <!-- Loading Screen -->
+    <!-- Loading Screen for Form Submission -->
     <div id="loadingScreen" class="loading-screen">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Submitting Estimate...</div>
-        <div class="loading-subtext">Please wait while we process your request</div>
+        <div class="loading-screen-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Submitting Estimate<span class="loading-dots"></span></div>
+            <div class="loading-subtext">Please wait while we process your request</div>
+        </div>
     </div>
 
-    <!-- Loading Screen -->
-    <div id="loadingScreen" class="loading-screen">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Submitting Estimate...</div>
-        <div class="loading-subtext">Please wait while we process your request</div>
+    <!-- Token Validation Loading Screen -->
+    <div id="tokenValidationScreen" class="loading-screen" style="display: none;">
+        <div class="loading-screen-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Validating the key<span class="loading-dots"></span></div>
+            <div class="loading-subtext">Please wait while we verify your invite link</div>
+        </div>
     </div>
 
     <!-- Bootstrap 5 JS -->
@@ -1621,9 +1697,121 @@
         // Define base_url for AJAX calls
         var base_url = '<?php echo base_url(); ?>';
 
+        // Token caching functions
+        const TOKEN_STORAGE_KEY = 'invite_token';
+
+        function getTokenFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('token');
+        }
+
+        function cacheToken(token) {
+            if (token) {
+                localStorage.setItem(TOKEN_STORAGE_KEY, token);
+            }
+        }
+
+        function getCachedToken() {
+            return localStorage.getItem(TOKEN_STORAGE_KEY);
+        }
+
+        function clearCachedToken() {
+            localStorage.removeItem(TOKEN_STORAGE_KEY);
+        }
+
+        // Check for token on page load
         $(document).ready(function() {
-            let currentStep = 1;
-            const totalSteps = 5;
+            // Handle token validation and caching
+            const urlToken = getTokenFromURL();
+            let validatedToken = null;
+            
+            // Function to validate token via AJAX
+            function validateToken(token, callback) {
+                // Show validation loading screen
+                $('#tokenValidationScreen').fadeIn(300);
+                $('body').css('overflow', 'hidden');
+                
+                $.ajax({
+                    url: base_url + 'validateInviteToken',
+                    type: 'POST',
+                    data: { token: token },
+                    dataType: 'json',
+                    success: function(response) {
+                        // Hide loading screen
+                        $('#tokenValidationScreen').fadeOut(300);
+                        $('body').css('overflow', '');
+                        
+                        if (response.success) {
+                            // Token is valid and marked as used
+                            cacheToken(token);
+                            validatedToken = token;
+                            if (callback) callback(true, null);
+                        } else {
+                            // Token validation failed
+                            if (callback) callback(false, response.message || 'Invalid token');
+                        }
+                    },
+                    error: function() {
+                        // Hide loading screen
+                        $('#tokenValidationScreen').fadeOut(300);
+                        $('body').css('overflow', '');
+                        
+                        if (callback) callback(false, 'Error validating token. Please try again.');
+                    }
+                });
+            }
+            
+            // Function to show error and redirect
+            function showTokenError(message) {
+                // Ensure loading screen is hidden first
+                $('#tokenValidationScreen').fadeOut(300);
+                $('body').css('overflow', '');
+                
+                // Hide form
+                $('.form-container').hide();
+                
+                // Show error message
+                const errorHtml = `
+                    <div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background: var(--secondary-color); padding: 2rem;">
+                        <div style="background: white; border-radius: 16px; padding: 3rem; max-width: 600px; text-align: center; box-shadow: 0 25px 80px rgba(13, 41, 73, 0.25);">
+                            <i class="bi bi-exclamation-triangle-fill" style="font-size: 5rem; color: #ef4444; margin-bottom: 1.5rem;"></i>
+                            <h1 style="font-size: 2rem; font-weight: 700; color: var(--secondary-color); margin-bottom: 1rem;">Invalid Invite Link</h1>
+                            <p style="font-size: 1.1rem; color: #6b7280; margin-bottom: 2rem;">${message}</p>
+                            <a href="${base_url}" class="btn" style="background: linear-gradient(135deg, var(--primary-color) 0%, #d4941a 100%); color: white; border: none; padding: 0.75rem 2rem; border-radius: 12px; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-block;">
+                                <i class="bi bi-house"></i> Go to Home
+                            </a>
+                        </div>
+                    </div>
+                `;
+                $('body').html(errorHtml);
+            }
+            
+            // Check for token
+            const cachedToken = getCachedToken();
+            
+            if (cachedToken) {
+                // Token exists in localStorage - no need to validate, just use it
+                // This means it was already validated before
+                initializeForm();
+            } else if (urlToken) {
+                // Token in URL but not in localStorage - validate it first
+                validateToken(urlToken, function(success, errorMessage) {
+                    if (!success) {
+                        showTokenError(errorMessage || 'Invalid or expired invite link');
+                        return;
+                    }
+                    // Token validated and cached, proceed to load form
+                    initializeForm();
+                });
+            } else {
+                // No token at all - load form normally
+                initializeForm();
+            }
+            
+            // Initialize form function
+            function initializeForm() {
+                let currentStep = 1;
+                const totalSteps = 5;
             let uploadedFiles = {
                 'electrical-panel': [],
                 'installation-area': [],
@@ -2402,6 +2590,12 @@
 
                 // Prepare FormData - files should already be in the file inputs
                 const formData = new FormData($('#estimateForm')[0]);
+                
+                // Add cached token to form data if available
+                const cachedToken = getCachedToken();
+                if (cachedToken) {
+                    formData.append('invite_token', cachedToken);
+                }
 
                 // Submit via AJAX
                 $.ajax({
@@ -2417,6 +2611,9 @@
                         $('body').css('overflow', '');
 
                         if (response.success) {
+                            // Clear cached token on successful submission
+                            clearCachedToken();
+                            
                             // Hide form and show success page
                             $('#estimateForm').closest('.form-body').find('form').hide();
                             $('.progress-bar-container').hide();
@@ -2634,13 +2831,14 @@
                 }
             });
 
-            // Initialize - ensure buttons are in correct state on load
-            $('#submitBtn').addClass('hidden');
-            $('#nextBtn').removeClass('hidden');
-            showStep(1);
+                // Initialize - ensure buttons are in correct state on load
+                $('#submitBtn').addClass('hidden');
+                $('#nextBtn').removeClass('hidden');
+                showStep(1);
 
-            // Load initial charger models
-            loadChargerModels();
+                // Load initial charger models
+                loadChargerModels();
+            } // End of initializeForm function
         });
     </script>
 </body>

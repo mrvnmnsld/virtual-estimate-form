@@ -782,6 +782,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="<?php echo base_url('invite-links'); ?>">
+                            <i class="bi bi-link-45deg"></i> Invite Links
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="<?php echo base_url('forms'); ?>">
                             <i class="bi bi-file-plus"></i> Forms
                         </a>

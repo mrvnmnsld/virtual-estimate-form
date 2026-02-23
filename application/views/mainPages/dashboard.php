@@ -378,6 +378,29 @@
             box-shadow: var(--shadow-md);
         }
 
+        /* Quick Action Cards */
+        a .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        a:hover .stat-card {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        a:hover .stat-card .stat-icon {
+            transform: rotate(-5deg) scale(1.1);
+        }
+
+        a .stat-card .stat-value {
+            color: var(--secondary-color);
+            transition: color 0.3s ease;
+        }
+
+        a:hover .stat-card .stat-value {
+            color: var(--primary-color);
+        }
+
         .stat-icon {
             width: 48px;
             height: 48px;
@@ -563,6 +586,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="<?php echo base_url('invite-links'); ?>">
+                            <i class="bi bi-link-45deg"></i> Invite Links
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="<?php echo base_url('forms'); ?>">
                             <i class="bi bi-file-plus"></i> Forms
                         </a>
@@ -631,6 +659,65 @@
                         </div>
                         <div class="stat-value">$45.2K</div>
                         <div class="stat-label">Total Value</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Section -->
+            <div class="row mb-3">
+                <div class="col-12">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">
+                                <i class="bi bi-lightning-charge"></i> Quick Actions
+                            </h3>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-3 col-sm-6">
+                                <a href="<?php echo base_url('submitted-forms'); ?>" class="text-decoration-none">
+                                    <div class="stat-card" style="cursor: pointer;">
+                                        <div class="stat-icon primary">
+                                            <i class="bi bi-file-earmark-text"></i>
+                                        </div>
+                                        <div class="stat-value" style="font-size: 1.25rem;">View</div>
+                                        <div class="stat-label">Submitted Forms</div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <a href="<?php echo base_url('invite-links'); ?>" class="text-decoration-none">
+                                    <div class="stat-card" style="cursor: pointer;">
+                                        <div class="stat-icon secondary">
+                                            <i class="bi bi-link-45deg"></i>
+                                        </div>
+                                        <div class="stat-value" style="font-size: 1.25rem;">Manage</div>
+                                        <div class="stat-label">Invite Links</div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <a href="<?php echo base_url('forms'); ?>" class="text-decoration-none">
+                                    <div class="stat-card" style="cursor: pointer;">
+                                        <div class="stat-icon primary">
+                                            <i class="bi bi-file-plus"></i>
+                                        </div>
+                                        <div class="stat-value" style="font-size: 1.25rem;">Create</div>
+                                        <div class="stat-label">New Estimate</div>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-sm-6">
+                                <a href="<?php echo base_url('dashboard'); ?>" class="text-decoration-none">
+                                    <div class="stat-card" style="cursor: pointer;">
+                                        <div class="stat-icon secondary">
+                                            <i class="bi bi-graph-up"></i>
+                                        </div>
+                                        <div class="stat-value" style="font-size: 1.25rem;">View</div>
+                                        <div class="stat-label">Dashboard</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

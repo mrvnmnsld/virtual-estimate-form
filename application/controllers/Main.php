@@ -12,7 +12,8 @@ class Main extends MY_Controller
         $current_method = $this->router->method;
         $excluded_methods = [
             'checkLoginCredentials', 'index', 'admin', 'forms', 'logout', 'testEmail', 'info', 'setupAdmin',
-            'getSampleImages', 'getChargerModels', 'addChargerModel', 'submitEstimate', 'getEstimates', 'getEstimateDetails'
+            'getSampleImages', 'getChargerModels', 'addChargerModel', 'submitEstimate', 'getEstimates', 'getEstimateDetails',
+            'accessForm', 'validateInviteToken'
         ]; // Add method names here to exclude from session check
         
         if (!in_array($current_method, $excluded_methods)) {
@@ -213,8 +214,119 @@ class Main extends MY_Controller
      */
     public function forms()
     {   
-        // echo "forms";
+        // Check if token exists in URL
+        $token = $this->input->get('token');
+        
+        // If no token in URL, show invalid page immediately
+        if (empty($token)) {
+            $data['error'] = 'Invalid invite link. No token provided.';
+            $this->load->view('forms_error', $data);
+            return;
+        }
+        
+        // Token exists in URL - let frontend validate it via AJAX
         $this->load->view('forms');
+    }
+
+    /**
+     * Validate invite token (AJAX endpoint)
+     */
+    public function validateInviteToken()
+    {
+        header('Content-Type: application/json');
+        
+        try {
+            $token = $this->input->post('token') ?? $this->input->get('token');
+            
+            if (empty($token)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Token is required'
+                ]);
+                return;
+            }
+            
+            // Validate token - check if it exists
+            $inviteLink = $this->_getRecordsData(
+                $data = array('*'),
+                $tables = array('invite_links'),
+                $fieldName = array('token'),
+                $where = array($token),
+                $join = null,
+                $joinType = null,
+                $sortBy = null,
+                $sortOrder = null,
+                $limit = 1,
+                $fieldNameLike = null,
+                $like = null,
+                $whereSpecial = null,
+                $groupBy = null
+            );
+            
+            if (empty($inviteLink) || !isset($inviteLink[0])) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid invite link'
+                ]);
+                return;
+            }
+            
+            $link = $inviteLink[0];
+            
+            // Check expiration
+            if (!empty($link->expires_at)) {
+                $expiresAt = strtotime($link->expires_at);
+                if ($expiresAt < time()) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'This invite link has expired'
+                    ]);
+                    return;
+                }
+            }
+            
+            // Check if token is already used
+            $isUsed = (int)$link->is_used === 1;
+            
+            // If token is already used, reject access (one-time use only)
+            if ($isUsed) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'This invite link has already been used'
+                ]);
+                return;
+            }
+            
+            // Token is NOT used - mark it as used immediately (first access)
+            $this->db->trans_start();
+            $updateData = [
+                'is_used' => 1,
+                'used_at' => date('Y-m-d H:i:s')
+            ];
+            $this->_updateRecords('invite_links', array('id'), array($link->id), $updateData);
+            $this->db->trans_complete();
+            
+            if ($this->db->trans_status() === FALSE) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Error processing invite link'
+                ]);
+                return;
+            }
+            
+            // Token is valid and now marked as used
+            echo json_encode([
+                'success' => true,
+                'message' => 'Token validated successfully',
+                'token' => $token
+            ]);
+            
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -590,14 +702,68 @@ class Main extends MY_Controller
                 'status' => 'pending'
             ];
 
+            // Check for invite token and validate it
+            $inviteToken = $this->input->post('invite_token');
+            
+            if (!empty($inviteToken)) {
+                // Validate token exists (it should already be marked as used from first access)
+                $inviteLink = $this->_getRecordsData(
+                    $data = array('*'),
+                    $tables = array('invite_links'),
+                    $fieldName = array('token'),
+                    $where = array($inviteToken),
+                    $join = null,
+                    $joinType = null,
+                    $sortBy = null,
+                    $sortOrder = null,
+                    $limit = 1,
+                    $fieldNameLike = null,
+                    $like = null,
+                    $whereSpecial = null,
+                    $groupBy = null
+                );
+                
+                if (empty($inviteLink) || !isset($inviteLink[0])) {
+                    header('Content-Type: application/json');
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Invalid invite link'
+                    ]);
+                    return;
+                }
+                
+                $link = $inviteLink[0];
+                
+                // Check expiration
+                if (!empty($link->expires_at)) {
+                    $expiresAt = strtotime($link->expires_at);
+                    if ($expiresAt < time()) {
+                        header('Content-Type: application/json');
+                        echo json_encode([
+                            'success' => false,
+                            'message' => 'This invite link has expired'
+                        ]);
+                        return;
+                    }
+                }
+                
+                // Token is valid (already marked as used on first access, so we just verify it exists)
+            }
+
+            // Start transaction
+            $this->db->trans_start();
+            
             // Insert estimate
             $insertedEstimate = $this->_insertRecordsRetData('estimates', $estimateData, 'id');
 
             if (!$insertedEstimate || !isset($insertedEstimate['id'])) {
+                $this->db->trans_rollback();
                 throw new Exception('Failed to save estimate');
             }
 
             $estimateId = $insertedEstimate['id'];
+            
+            // Token is already marked as used on first access, no need to update again
 
             // Handle file uploads
             $uploadedFiles = [];
@@ -645,6 +811,18 @@ class Main extends MY_Controller
                         }
                     }
                 }
+            }
+            
+            // Complete transaction
+            $this->db->trans_complete();
+            
+            if ($this->db->trans_status() === FALSE) {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Failed to submit estimate. Please try again.'
+                ]);
+                return;
             }
 
             header('Content-Type: application/json');
@@ -933,6 +1111,285 @@ class Main extends MY_Controller
                 'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
             ]);
+        }
+    }
+
+    /**
+     * Invite Links page
+     */
+    public function inviteLinks()
+    {
+        // Check if user is logged in
+        if (!isset($_SESSION["currentUser"]) || empty($_SESSION["currentUser"])) {
+            redirect(base_url('admin'));
+        } else {
+            $data['title'] = 'Invite Links';
+            $data['user'] = $_SESSION["currentUser"];
+            $this->load->view('mainPages/invite_links', $data);
+        }
+    }
+
+    /**
+     * Create invite link (AJAX endpoint)
+     */
+    public function createInviteLink()
+    {
+        header('Content-Type: application/json');
+        
+        try {
+            // Check if user is logged in
+            if (!isset($_SESSION["currentUser"]) || empty($_SESSION["currentUser"])) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]);
+                return;
+            }
+            
+            $userId = $_SESSION["currentUser"]['id'];
+            $expiresAt = $this->input->post('expires_at');
+            
+            // Generate unique token
+            $token = bin2hex(random_bytes(32));
+            
+            // Check if token already exists (very unlikely but check anyway)
+            $existing = $this->_getRecordsData(
+                $data = array('id'),
+                $tables = array('invite_links'),
+                $fieldName = array('token'),
+                $where = array($token),
+                $join = null,
+                $joinType = null,
+                $sortBy = null,
+                $sortOrder = null,
+                $limit = 1,
+                $fieldNameLike = null,
+                $like = null,
+                $whereSpecial = null,
+                $groupBy = null
+            );
+            
+            // If token exists, generate a new one (shouldn't happen)
+            while (!empty($existing)) {
+                $token = bin2hex(random_bytes(32));
+                $existing = $this->_getRecordsData(
+                    $data = array('id'),
+                    $tables = array('invite_links'),
+                    $fieldName = array('token'),
+                    $where = array($token),
+                    $join = null,
+                    $joinType = null,
+                    $sortBy = null,
+                    $sortOrder = null,
+                    $limit = 1,
+                    $fieldNameLike = null,
+                    $like = null,
+                    $whereSpecial = null,
+                    $groupBy = null
+                );
+            }
+            
+            // Prepare data
+            $insertData = [
+                'token' => $token,
+                'created_by' => $userId,
+                'is_used' => 0,
+                'expires_at' => !empty($expiresAt) ? date('Y-m-d H:i:s', strtotime($expiresAt)) : null
+            ];
+            
+            // Insert invite link
+            $this->db->trans_start();
+            $this->_insertRecords('invite_links', $insertData);
+            $this->db->trans_complete();
+            
+            if ($this->db->trans_status() === FALSE) {
+                throw new Exception('Failed to create invite link');
+            }
+            
+            echo json_encode([
+                'success' => true,
+                'message' => 'Invite link created successfully',
+                'token' => $token
+            ]);
+            
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to create invite link: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Get invite links (AJAX endpoint)
+     */
+    public function getInviteLinks()
+    {
+        header('Content-Type: application/json');
+        
+        try {
+            // Check if user is logged in
+            if (!isset($_SESSION["currentUser"]) || empty($_SESSION["currentUser"])) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]);
+                return;
+            }
+            
+            // Get invite links with creator info
+            $inviteLinks = $this->_getRecordsData(
+                $data = array('il.*', 'au.username as created_by_name', 'au.full_name'),
+                $tables = array('invite_links il', 'admin_users au'),
+                $fieldName = null,
+                $where = null,
+                $join = array('il.created_by = au.id'),
+                $joinType = array('LEFT'),
+                $sortBy = array('il.created_at'),
+                $sortOrder = array('DESC'),
+                $limit = null,
+                $fieldNameLike = null,
+                $like = null,
+                $whereSpecial = null,
+                $groupBy = null
+            );
+            
+            // Format data
+            $formattedLinks = [];
+            if (!empty($inviteLinks)) {
+                foreach ($inviteLinks as $link) {
+                    // Determine status on server side for accuracy
+                    $status = 'active';
+                    $isUsed = (int)$link->is_used === 1;
+                    
+                    if ($isUsed) {
+                        $status = 'used';
+                    } elseif (!empty($link->expires_at)) {
+                        $expiresAt = strtotime($link->expires_at);
+                        $now = time();
+                        if ($expiresAt < $now) {
+                            $status = 'expired';
+                        }
+                    }
+                    
+                    $formattedLinks[] = [
+                        'id' => $link->id,
+                        'token' => $link->token,
+                        'created_by' => $link->created_by,
+                        'created_by_name' => $link->full_name ? $link->full_name : $link->created_by_name,
+                        'is_used' => (int)$link->is_used, // Ensure it's an integer
+                        'used_at' => $link->used_at,
+                        'used_at_formatted' => $link->used_at ? date('M d, Y H:i', strtotime($link->used_at)) : null,
+                        'expires_at' => $link->expires_at,
+                        'expires_at_formatted' => $link->expires_at ? date('M d, Y H:i', strtotime($link->expires_at)) : null,
+                        'created_at' => $link->created_at,
+                        'created_at_formatted' => date('M d, Y H:i', strtotime($link->created_at)),
+                        'status' => $status // Add server-calculated status
+                    ];
+                }
+            }
+            
+            echo json_encode([
+                'success' => true,
+                'data' => $formattedLinks
+            ]);
+            
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error: ' . $e->getMessage(),
+                'data' => []
+            ]);
+        }
+    }
+
+    /**
+     * Delete invite link (AJAX endpoint)
+     */
+    public function deleteInviteLink()
+    {
+        header('Content-Type: application/json');
+        
+        try {
+            // Check if user is logged in
+            if (!isset($_SESSION["currentUser"]) || empty($_SESSION["currentUser"])) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ]);
+                return;
+            }
+            
+            $linkId = intval($this->input->post('id') ?? 0);
+            
+            if ($linkId <= 0) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid invite link ID'
+                ]);
+                return;
+            }
+            
+            // Check if link exists
+            $link = $this->_getRecordsData(
+                $data = array('id', 'is_used'),
+                $tables = array('invite_links'),
+                $fieldName = array('id'),
+                $where = array($linkId),
+                $join = null,
+                $joinType = null,
+                $sortBy = null,
+                $sortOrder = null,
+                $limit = 1,
+                $fieldNameLike = null,
+                $like = null,
+                $whereSpecial = null,
+                $groupBy = null
+            );
+            
+            if (empty($link) || !isset($link[0])) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invite link not found'
+                ]);
+                return;
+            }
+            
+            // Delete invite link
+            $this->db->trans_start();
+            $this->db->where('id', $linkId);
+            $this->db->delete('invite_links');
+            $this->db->trans_complete();
+            
+            if ($this->db->trans_status() === FALSE) {
+                throw new Exception('Failed to delete invite link');
+            }
+            
+            echo json_encode([
+                'success' => true,
+                'message' => 'Invite link deleted successfully'
+            ]);
+            
+        } catch (Exception $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Failed to delete invite link: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Access form via invite link (handled in forms() method)
+     * This method is kept for backward compatibility but logic is in forms()
+     */
+    public function accessForm()
+    {
+        // Redirect to forms with token
+        $token = $this->input->get('token');
+        if (!empty($token)) {
+            redirect(base_url('forms?token=' . urlencode($token)));
+        } else {
+            redirect(base_url('forms'));
         }
     }
 }
